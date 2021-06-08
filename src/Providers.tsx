@@ -1,11 +1,16 @@
 import React from "react";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { ChakraProvider } from "@chakra-ui/react";
 
 const client = new ApolloClient({
-  uri: "https://48p1r2roz4.sse.codesandbox.io",
+  uri: "http://localhost:5000/graphql",
   cache: new InMemoryCache(),
 });
 
 export const Providers: React.FC = ({ children }) => {
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+  return (
+    <ApolloProvider client={client}>
+      <ChakraProvider>{children}</ChakraProvider>
+    </ApolloProvider>
+  );
 };
