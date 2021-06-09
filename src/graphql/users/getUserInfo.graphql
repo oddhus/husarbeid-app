@@ -1,0 +1,17 @@
+query getUserInfo {
+  findUser {
+    user {
+      id
+      username
+      birthDate
+      familyId
+      family {
+        familyName
+      }
+    }
+    errors {
+      code
+      message
+    }
+  }
+}

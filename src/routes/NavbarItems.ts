@@ -10,8 +10,8 @@ export const NAV_ITEMS: Array<NavItem> = [
         href: "#",
       },
       {
-        label: "Nye oppgaver",
-        subLabel: "Finn nye oppgaver",
+        label: "Historikk",
+        subLabel: "Se tidligere oppgaver",
         href: "#",
       },
     ],
@@ -20,20 +20,20 @@ export const NAV_ITEMS: Array<NavItem> = [
     label: "Familie",
     children: [
       {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
+        label: "Tilgjenglige oppgaver",
+        subLabel: "Se hvilke oppgaver som skal gjøres",
         href: "#",
       },
       {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
+        label: "Opprett en oppgave",
+        subLabel: "Hva må gjøres?",
         href: "#",
       },
     ],
   },
   {
-    label: "Konto",
-    href: "#",
+    label: "Min Profil",
+    href: "/my-account",
   },
   {
     label: "Om siden",

@@ -4,3 +4,7 @@ export type NavItem = {
   children?: Array<NavItem>;
   href?: string;
 };
+
+export type storedUser = {
+  token: string;
+};

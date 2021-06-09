@@ -1,13 +1,16 @@
-import React from "react";
-
+import React, { useState } from "react";
 import {
   Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useLoginMutation } from "../../generated/graphql";
+import { useHistory } from "react-router";
+import { saveToken } from "../../utils/tokenUtils";
 
 type Inputs = {
   name: string;
@@ -21,13 +24,23 @@ export const SignIn = () => {
     formState: { errors, isSubmitting },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = (values) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(values, null, 2));
-        resolve(null);
-      }, 3000);
-    });
+  const [loginMutation] = useLoginMutation();
+  const [errorMessage, setErrorMessage] = useState("");
+  const history = useHistory();
+
+  const onSubmit: SubmitHandler<Inputs> = async (variables) => {
+    const response = await loginMutation({ variables });
+    if (response.data?.loginUser.token) {
+      saveToken(response.data.loginUser.token);
+      history.push("/");
+    } else if (
+      response.data?.loginUser.errors &&
+      response.data.loginUser.errors.length > 0
+    ) {
+      setErrorMessage(response.data.loginUser.errors[0].message);
+    } else {
+      setErrorMessage("Something went wrong. Please try again later");
+    }
   };
 
   return (
@@ -39,7 +52,7 @@ export const SignIn = () => {
           placeholder="name"
           {...register("name", {
             required: "This is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
+            minLength: { value: 3, message: "Minimum length should be 4" },
           })}
         />
         <FormErrorMessage>
@@ -50,10 +63,11 @@ export const SignIn = () => {
         <FormLabel htmlFor="name">Password</FormLabel>
         <Input
           id="password"
+          type="password"
           placeholder="password"
           {...register("password", {
             required: "This is required",
-            minLength: { value: 8, message: "Minimum length should be 8" },
+            minLength: { value: 3, message: "Minimum length should be 8" },
           })}
         />
         <FormErrorMessage>
@@ -63,6 +77,7 @@ export const SignIn = () => {
       <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
         Login
       </Button>
+      {errorMessage && <Text color="red.500">{errorMessage}</Text>}
     </form>
   );
 };

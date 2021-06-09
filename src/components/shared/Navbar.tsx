@@ -87,7 +87,7 @@ export default function WithSubnavigation() {
             fontSize={"sm"}
             fontWeight={400}
             variant={"link"}
-            href={"#"}
+            href={"auth"}
           >
             Sign In
           </Button>
@@ -203,12 +203,10 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
 };
 
 const MobileNav = ({ toggleMenu }: ToggleFunc) => {
+  const bg = useColorModeValue("white", "gray.800");
+
   return (
-    <Stack
-      bg={useColorModeValue("white", "gray.800")}
-      p={4}
-      display={{ md: "none" }}
-    >
+    <Stack bg={bg} p={4} display={{ md: "none" }}>
       {NAV_ITEMS.map((navItem) => (
         <MobileNavItem
           key={navItem.label}
@@ -272,7 +270,7 @@ const MobileNavItem = ({
                 key={child.label}
                 py={2}
                 href={child.href}
-                onClick={toggleMenu}
+                {...(children && { onClick: toggleMenu })}
               >
                 {child.label}
               </Link>

@@ -3,6 +3,7 @@ mutation Login($name: String!, $password: String!) {
     token
     user {
       id
+      username
       familyId
     }
     errors {

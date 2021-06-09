@@ -205,6 +205,27 @@ export type UserError = {
   code: Scalars['String'];
 };
 
+export type GetUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetUserInfoQuery = (
+  { __typename?: 'Query' }
+  & { findUser: (
+    { __typename?: 'GetUserPayload' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'username' | 'birthDate' | 'familyId'>
+      & { family?: Maybe<(
+        { __typename?: 'Family' }
+        & Pick<Family, 'familyName'>
+      )> }
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'UserError' }
+      & Pick<UserError, 'code' | 'message'>
+    )>> }
+  ) }
+);
+
 export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -229,7 +250,7 @@ export type LoginMutation = (
     & Pick<LoginUserPayload, 'token'>
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'familyId'>
+      & Pick<User, 'id' | 'username' | 'familyId'>
     )>, errors?: Maybe<Array<(
       { __typename?: 'UserError' }
       & Pick<UserError, 'code' | 'message'>
@@ -259,6 +280,52 @@ export type RegisterMutation = (
 );
 
 
+export const GetUserInfoDocument = gql`
+    query getUserInfo {
+  findUser {
+    user {
+      id
+      username
+      birthDate
+      familyId
+      family {
+        familyName
+      }
+    }
+    errors {
+      code
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserInfoQuery__
+ *
+ * To run a query within a React component, call `useGetUserInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserInfoQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetUserInfoQuery(baseOptions?: Apollo.QueryHookOptions<GetUserInfoQuery, GetUserInfoQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserInfoQuery, GetUserInfoQueryVariables>(GetUserInfoDocument, options);
+      }
+export function useGetUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserInfoQuery, GetUserInfoQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserInfoQuery, GetUserInfoQueryVariables>(GetUserInfoDocument, options);
+        }
+export type GetUserInfoQueryHookResult = ReturnType<typeof useGetUserInfoQuery>;
+export type GetUserInfoLazyQueryHookResult = ReturnType<typeof useGetUserInfoLazyQuery>;
+export type GetUserInfoQueryResult = Apollo.QueryResult<GetUserInfoQuery, GetUserInfoQueryVariables>;
 export const GetUsersDocument = gql`
     query getUsers {
   users {
@@ -300,6 +367,7 @@ export const LoginDocument = gql`
     token
     user {
       id
+      username
       familyId
     }
     errors {
