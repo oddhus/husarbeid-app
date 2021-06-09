@@ -21,21 +21,31 @@ import {
   ChevronDownIcon,
   ChevronRightIcon,
 } from "@chakra-ui/icons";
+import { NavItem } from "../../types";
+import { NAV_ITEMS } from "../../routes/NavbarItems";
+
+type ToggleFunc = {
+  toggleMenu: () => void;
+};
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
+  const bg = useColorModeValue("white", "gray.800");
+  const color = useColorModeValue("gray.600", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.900");
+  const colorText = useColorModeValue("gray.800", "white");
 
   return (
     <Box>
       <Flex
-        bg={useColorModeValue("white", "gray.800")}
-        color={useColorModeValue("gray.600", "white")}
+        bg={bg}
+        color={color}
         minH={"60px"}
         py={{ base: 2 }}
         px={{ base: 4 }}
         borderBottom={1}
         borderStyle={"solid"}
-        borderColor={useColorModeValue("gray.200", "gray.900")}
+        borderColor={borderColor}
         align={"center"}
       >
         <Flex
@@ -56,9 +66,9 @@ export default function WithSubnavigation() {
           <Text
             textAlign={useBreakpointValue({ base: "center", md: "left" })}
             fontFamily={"heading"}
-            color={useColorModeValue("gray.800", "white")}
+            color={colorText}
           >
-            Logo
+            Husarbeid
           </Text>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
@@ -98,13 +108,17 @@ export default function WithSubnavigation() {
       </Flex>
 
       <Collapse in={isOpen} animateOpacity>
-        <MobileNav />
+        <MobileNav toggleMenu={onToggle} />
       </Collapse>
     </Box>
   );
 }
 
 const DesktopNav = () => {
+  const colorLink = useColorModeValue("gray.600", "gray.200");
+  const colorHover = useColorModeValue("gray.800", "white");
+  const bg = useColorModeValue("white", "gray.800");
+
   return (
     <Stack direction={"row"} spacing={4}>
       {NAV_ITEMS.map((navItem) => (
@@ -116,10 +130,10 @@ const DesktopNav = () => {
                 href={navItem.href ?? "#"}
                 fontSize={"sm"}
                 fontWeight={500}
-                color={useColorModeValue("gray.600", "gray.200")}
+                color={colorLink}
                 _hover={{
                   textDecoration: "none",
-                  color: useColorModeValue("gray.800", "white"),
+                  color: colorHover,
                 }}
               >
                 {navItem.label}
@@ -130,7 +144,7 @@ const DesktopNav = () => {
               <PopoverContent
                 border={0}
                 boxShadow={"xl"}
-                bg={useColorModeValue("white", "gray.800")}
+                bg={bg}
                 p={4}
                 rounded={"xl"}
                 minW={"sm"}
@@ -150,6 +164,8 @@ const DesktopNav = () => {
 };
 
 const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
+  const bg = useColorModeValue("pink.50", "gray.900");
+
   return (
     <Link
       href={href}
@@ -157,7 +173,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
       display={"block"}
       p={2}
       rounded={"md"}
-      _hover={{ bg: useColorModeValue("pink.50", "gray.900") }}
+      _hover={{ bg }}
     >
       <Stack direction={"row"} align={"center"}>
         <Box>
@@ -186,7 +202,7 @@ const DesktopSubNav = ({ label, href, subLabel }: NavItem) => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ toggleMenu }: ToggleFunc) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}
@@ -194,14 +210,25 @@ const MobileNav = () => {
       display={{ md: "none" }}
     >
       {NAV_ITEMS.map((navItem) => (
-        <MobileNavItem key={navItem.label} {...navItem} />
+        <MobileNavItem
+          key={navItem.label}
+          toggleMenu={toggleMenu}
+          {...navItem}
+        />
       ))}
     </Stack>
   );
 };
 
-const MobileNavItem = ({ label, children, href }: NavItem) => {
+const MobileNavItem = ({
+  label,
+  children,
+  href,
+  toggleMenu,
+}: NavItem & ToggleFunc) => {
   const { isOpen, onToggle } = useDisclosure();
+  const colorText = useColorModeValue("gray.600", "gray.200");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
     <Stack spacing={4} onClick={children && onToggle}>
@@ -214,11 +241,9 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
         _hover={{
           textDecoration: "none",
         }}
+        {...(!children && { onClick: toggleMenu })}
       >
-        <Text
-          fontWeight={600}
-          color={useColorModeValue("gray.600", "gray.200")}
-        >
+        <Text fontWeight={600} color={colorText}>
           {label}
         </Text>
         {children && (
@@ -238,12 +263,17 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
           pl={4}
           borderLeft={1}
           borderStyle={"solid"}
-          borderColor={useColorModeValue("gray.200", "gray.700")}
+          borderColor={borderColor}
           align={"start"}
         >
           {children &&
             children.map((child) => (
-              <Link key={child.label} py={2} href={child.href}>
+              <Link
+                key={child.label}
+                py={2}
+                href={child.href}
+                onClick={toggleMenu}
+              >
                 {child.label}
               </Link>
             ))}
@@ -252,51 +282,3 @@ const MobileNavItem = ({ label, children, href }: NavItem) => {
     </Stack>
   );
 };
-
-interface NavItem {
-  label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
-}
-
-const NAV_ITEMS: Array<NavItem> = [
-  {
-    label: "Inspiration",
-    children: [
-      {
-        label: "Explore Design Work",
-        subLabel: "Trending Design to inspire you",
-        href: "#",
-      },
-      {
-        label: "New & Noteworthy",
-        subLabel: "Up-and-coming Designers",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Find Work",
-    children: [
-      {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
-        href: "#",
-      },
-      {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
-        href: "#",
-      },
-    ],
-  },
-  {
-    label: "Learn Design",
-    href: "#",
-  },
-  {
-    label: "Hire Designers",
-    href: "#",
-  },
-];
