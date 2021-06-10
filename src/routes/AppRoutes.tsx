@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Authentication } from "../components/Authentication/AuthenticationPage";
+import { LandingPage } from "../components/LandingPage/LandingPage";
 import MyAccount from "../components/MyAccount/MyAccount";
 
 interface Props {}
@@ -12,6 +13,7 @@ export const AppRoutes: React.FC<Props> = () => {
     >
       <div style={{ flex: 1 }}>
         <Switch>
+          <Route exact path="/" component={LandingPage} />
           <Route exact path="/auth" component={Authentication} />
           <Route exact path="/my-account" component={MyAccount} />
         </Switch>

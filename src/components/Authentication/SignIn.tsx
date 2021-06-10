@@ -10,7 +10,9 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLoginMutation } from "../../generated/graphql";
 import { useHistory } from "react-router";
-import { saveToken } from "../../utils/tokenUtils";
+import { saveTokenAndUser } from "../../utils/tokenUtils";
+import { useSetRecoilState } from "recoil";
+import { userState } from "./authAtom";
 
 type Inputs = {
   name: string;
@@ -26,12 +28,19 @@ export const SignIn = () => {
 
   const [loginMutation] = useLoginMutation();
   const [errorMessage, setErrorMessage] = useState("");
+  const setUser = useSetRecoilState(userState);
   const history = useHistory();
 
   const onSubmit: SubmitHandler<Inputs> = async (variables) => {
     const response = await loginMutation({ variables });
-    if (response.data?.loginUser.token) {
-      saveToken(response.data.loginUser.token);
+    if (response.data?.loginUser.token && response.data.loginUser.user) {
+      const { token, user } = response.data.loginUser;
+      saveTokenAndUser(token, user.id, user.username, user.familyId);
+      setUser({
+        userId: user.id,
+        username: user.username,
+        familyId: user.familyId,
+      });
       history.push("/");
     } else if (
       response.data?.loginUser.errors &&
