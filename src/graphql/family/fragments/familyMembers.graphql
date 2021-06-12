@@ -1,0 +1,5 @@
+fragment familyMembers on Family {
+  members {
+    ...userInfo
+  }
+}

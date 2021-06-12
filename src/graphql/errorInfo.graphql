@@ -1,0 +1,4 @@
+fragment errorInfo on UserError {
+  code
+  message
+}

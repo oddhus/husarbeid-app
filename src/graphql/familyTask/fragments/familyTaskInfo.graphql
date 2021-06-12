@@ -1,0 +1,9 @@
+fragment familyTaskInfo on FamilyTask {
+  createdOn
+  shortDescription
+  payment
+  isCompleted
+  createdBy {
+    ...userInfo
+  }
+}

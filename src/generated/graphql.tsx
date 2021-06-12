@@ -205,6 +205,43 @@ export type UserError = {
   code: Scalars['String'];
 };
 
+export type ErrorInfoFragment = (
+  { __typename?: 'UserError' }
+  & Pick<UserError, 'code' | 'message'>
+);
+
+export type FamilyInfoFragment = (
+  { __typename?: 'Family' }
+  & Pick<Family, 'familyName'>
+);
+
+export type FamilyMembersFragment = (
+  { __typename?: 'Family' }
+  & { members?: Maybe<Array<Maybe<(
+    { __typename?: 'User' }
+    & UserInfoFragment
+  )>>> }
+);
+
+export type FamilyTaskInfoFragment = (
+  { __typename?: 'FamilyTask' }
+  & Pick<FamilyTask, 'createdOn' | 'shortDescription' | 'payment' | 'isCompleted'>
+  & { createdBy?: Maybe<(
+    { __typename?: 'User' }
+    & UserInfoFragment
+  )> }
+);
+
+export type UserDetailsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'birthDate' | 'familyId'>
+);
+
+export type UserInfoFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'username' | 'familyId'>
+);
+
 export type GetUserInfoQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -214,27 +251,37 @@ export type GetUserInfoQuery = (
     { __typename?: 'GetUserPayload' }
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'birthDate' | 'familyId'>
       & { family?: Maybe<(
         { __typename?: 'Family' }
-        & Pick<Family, 'familyName'>
+        & FamilyInfoFragment
       )> }
+      & UserInfoFragment
+      & UserDetailsFragment
     )>, errors?: Maybe<Array<(
       { __typename?: 'UserError' }
-      & Pick<UserError, 'code' | 'message'>
+      & ErrorInfoFragment
     )>> }
   ) }
 );
 
-export type GetUsersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetUserTasksQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetUsersQuery = (
+export type GetUserTasksQuery = (
   { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
-  )> }
+  & { findUser: (
+    { __typename?: 'GetUserPayload' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & { userTasks?: Maybe<Array<Maybe<(
+        { __typename?: 'FamilyTask' }
+        & FamilyTaskInfoFragment
+      )>>> }
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'UserError' }
+      & ErrorInfoFragment
+    )>> }
+  ) }
 );
 
 export type LoginMutationVariables = Exact<{
@@ -250,10 +297,10 @@ export type LoginMutation = (
     & Pick<LoginUserPayload, 'token'>
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username' | 'familyId'>
+      & UserInfoFragment
     )>, errors?: Maybe<Array<(
       { __typename?: 'UserError' }
-      & Pick<UserError, 'code' | 'message'>
+      & ErrorInfoFragment
     )>> }
   ) }
 );
@@ -271,34 +318,75 @@ export type RegisterMutation = (
     & Pick<AddUserPayload, 'token'>
     & { user?: Maybe<(
       { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
+      & UserInfoFragment
     )>, errors?: Maybe<Array<(
       { __typename?: 'UserError' }
-      & Pick<UserError, 'code' | 'message'>
+      & ErrorInfoFragment
     )>> }
   ) }
 );
 
-
+export const ErrorInfoFragmentDoc = gql`
+    fragment errorInfo on UserError {
+  code
+  message
+}
+    `;
+export const FamilyInfoFragmentDoc = gql`
+    fragment familyInfo on Family {
+  familyName
+}
+    `;
+export const UserInfoFragmentDoc = gql`
+    fragment userInfo on User {
+  id
+  username
+  familyId
+}
+    `;
+export const FamilyMembersFragmentDoc = gql`
+    fragment familyMembers on Family {
+  members {
+    ...userInfo
+  }
+}
+    ${UserInfoFragmentDoc}`;
+export const FamilyTaskInfoFragmentDoc = gql`
+    fragment familyTaskInfo on FamilyTask {
+  createdOn
+  shortDescription
+  payment
+  isCompleted
+  createdBy {
+    ...userInfo
+  }
+}
+    ${UserInfoFragmentDoc}`;
+export const UserDetailsFragmentDoc = gql`
+    fragment userDetails on User {
+  birthDate
+  familyId
+}
+    `;
 export const GetUserInfoDocument = gql`
     query getUserInfo {
   findUser {
     user {
-      id
-      username
-      birthDate
-      familyId
+      ...userInfo
+      ...userDetails
       family {
-        familyName
+        ...familyInfo
       }
     }
     errors {
-      code
-      message
+      ...errorInfo
     }
   }
 }
-    `;
+    ${UserInfoFragmentDoc}
+${UserDetailsFragmentDoc}
+${FamilyInfoFragmentDoc}
+${ErrorInfoFragmentDoc}`;
 
 /**
  * __useGetUserInfoQuery__
@@ -326,57 +414,62 @@ export function useGetUserInfoLazyQuery(baseOptions?: Apollo.LazyQueryHookOption
 export type GetUserInfoQueryHookResult = ReturnType<typeof useGetUserInfoQuery>;
 export type GetUserInfoLazyQueryHookResult = ReturnType<typeof useGetUserInfoLazyQuery>;
 export type GetUserInfoQueryResult = Apollo.QueryResult<GetUserInfoQuery, GetUserInfoQueryVariables>;
-export const GetUsersDocument = gql`
-    query getUsers {
-  users {
-    id
-    username
+export const GetUserTasksDocument = gql`
+    query getUserTasks {
+  findUser {
+    user {
+      userTasks {
+        ...familyTaskInfo
+      }
+    }
+    errors {
+      ...errorInfo
+    }
   }
 }
-    `;
+    ${FamilyTaskInfoFragmentDoc}
+${ErrorInfoFragmentDoc}`;
 
 /**
- * __useGetUsersQuery__
+ * __useGetUserTasksQuery__
  *
- * To run a query within a React component, call `useGetUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetUserTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetUsersQuery({
+ * const { data, loading, error } = useGetUserTasksQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetUsersQuery(baseOptions?: Apollo.QueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetUserTasksQuery(baseOptions?: Apollo.QueryHookOptions<GetUserTasksQuery, GetUserTasksQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+        return Apollo.useQuery<GetUserTasksQuery, GetUserTasksQueryVariables>(GetUserTasksDocument, options);
       }
-export function useGetUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUsersQuery, GetUsersQueryVariables>) {
+export function useGetUserTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserTasksQuery, GetUserTasksQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUsersQuery, GetUsersQueryVariables>(GetUsersDocument, options);
+          return Apollo.useLazyQuery<GetUserTasksQuery, GetUserTasksQueryVariables>(GetUserTasksDocument, options);
         }
-export type GetUsersQueryHookResult = ReturnType<typeof useGetUsersQuery>;
-export type GetUsersLazyQueryHookResult = ReturnType<typeof useGetUsersLazyQuery>;
-export type GetUsersQueryResult = Apollo.QueryResult<GetUsersQuery, GetUsersQueryVariables>;
+export type GetUserTasksQueryHookResult = ReturnType<typeof useGetUserTasksQuery>;
+export type GetUserTasksLazyQueryHookResult = ReturnType<typeof useGetUserTasksLazyQuery>;
+export type GetUserTasksQueryResult = Apollo.QueryResult<GetUserTasksQuery, GetUserTasksQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($name: String!, $password: String!) {
   loginUser(input: {name: $name, password: $password}) {
     token
     user {
-      id
-      username
-      familyId
+      ...userInfo
     }
     errors {
-      code
-      message
+      ...errorInfo
     }
   }
 }
-    `;
+    ${UserInfoFragmentDoc}
+${ErrorInfoFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -409,16 +502,15 @@ export const RegisterDocument = gql`
   createUser(input: {name: $name, password: $password}) {
     token
     user {
-      id
-      username
+      ...userInfo
     }
     errors {
-      code
-      message
+      ...errorInfo
     }
   }
 }
-    `;
+    ${UserInfoFragmentDoc}
+${ErrorInfoFragmentDoc}`;
 export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
 
 /**

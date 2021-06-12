@@ -2,12 +2,10 @@ mutation Register($name: String!, $password: String!) {
   createUser(input: { name: $name, password: $password }) {
     token
     user {
-      id
-      username
+      ...userInfo
     }
     errors {
-      code
-      message
+      ...errorInfo
     }
   }
 }

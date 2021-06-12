@@ -1,0 +1,12 @@
+query getUserTasks {
+  findUser {
+    user {
+      userTasks {
+        ...familyTaskInfo
+      }
+    }
+    errors {
+      ...errorInfo
+    }
+  }
+}

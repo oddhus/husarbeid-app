@@ -1,0 +1,3 @@
+fragment userDetails on User {
+  birthDate
+}
