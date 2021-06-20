@@ -11,10 +11,12 @@ export const saveTokenAndUser = (
     "userData",
     JSON.stringify({
       token,
-      userId,
-      username,
-      familyId,
-      expirationTime: addHours(new Date(), 1),
+      user: {
+        userId,
+        username,
+        familyId,
+      },
+      expirationTime: addHours(new Date(), 3),
     })
   );
 };
@@ -27,16 +29,8 @@ export const retrieveUserWithToken = () => {
   }
 };
 
-export const retrieveTokenAndUser = () => {
-  const storedData = localStorage.getItem("userData");
-  if (storedData) {
-    const data = JSON.parse(storedData) as storedUser;
-    return data;
-  }
-};
-
 export const retrieveToken = () => {
-  return retrieveTokenAndUser()?.token;
+  return retrieveUserWithToken()?.token;
 };
 
 export const removeToken = () => {

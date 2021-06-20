@@ -9,8 +9,6 @@ import { setContext } from "@apollo/client/link/context";
 import { ChakraProvider } from "@chakra-ui/react";
 import { RecoilRoot } from "recoil";
 import { retrieveToken } from "./utils/tokenUtils";
-import { Router } from "react-router";
-import { BrowserRouter } from "react-router-dom";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",
