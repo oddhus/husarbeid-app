@@ -1,8 +1,6 @@
 export type NavItem = {
   label: string;
-  subLabel?: string;
-  children?: Array<NavItem>;
-  href?: string;
+  to: string;
 };
 
 export type storedUser = {

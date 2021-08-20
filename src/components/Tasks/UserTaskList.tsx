@@ -1,9 +1,9 @@
-import { Center, CircularProgress, Heading } from "@chakra-ui/react";
+import { Center, CircularProgress, Text } from "@chakra-ui/react";
 import React from "react";
-import { useGetUserTasksQuery } from "../generated/graphql";
+import { useGetUserTasksQuery } from "../../generated/graphql";
 import { TaskboardItem } from "./TaskboardItem";
 
-export const TaskList = () => {
+export const UserTaskList = () => {
   const { data, loading, error } = useGetUserTasksQuery();
 
   if (loading) {
@@ -17,16 +17,16 @@ export const TaskList = () => {
   if (!data || !data.findUser.user?.userTasks) {
     return (
       <Center>
-        <Heading>No tasks</Heading>
+        <Text>No tasks</Text>
       </Center>
     );
   }
 
   return (
     <>
-      {data.findUser.user!.userTasks.map((task) => {
-        <TaskboardItem task={task!} />;
-      })}
+      {data.findUser.user.userTasks.map((task) => (
+        <TaskboardItem task={task!} />
+      ))}
     </>
   );
 };

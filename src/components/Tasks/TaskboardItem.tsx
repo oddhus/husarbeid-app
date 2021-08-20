@@ -3,7 +3,7 @@ import React from "react";
 import {
   FamilyInfoFragment,
   FamilyTaskInfoFragment,
-} from "../generated/graphql";
+} from "../../generated/graphql";
 
 type Props = {
   task: FamilyTaskInfoFragment;

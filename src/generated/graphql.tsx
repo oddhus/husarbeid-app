@@ -210,6 +210,26 @@ export type ErrorInfoFragment = (
   & Pick<UserError, 'code' | 'message'>
 );
 
+export type CreateFamilyMutationVariables = Exact<{
+  familyName: Scalars['String'];
+}>;
+
+
+export type CreateFamilyMutation = (
+  { __typename?: 'Mutation' }
+  & { createFamily: (
+    { __typename?: 'AddFamilyPayload' }
+    & { family?: Maybe<(
+      { __typename?: 'Family' }
+      & Pick<Family, 'id' | 'familyName'>
+      & { members?: Maybe<Array<Maybe<(
+        { __typename?: 'User' }
+        & Pick<User, 'username'>
+      )>>> }
+    )> }
+  ) }
+);
+
 export type FamilyInfoFragment = (
   { __typename?: 'Family' }
   & Pick<Family, 'familyName'>
@@ -223,6 +243,24 @@ export type FamilyMembersFragment = (
   )>>> }
 );
 
+export type CreateTaskMutationVariables = Exact<{
+  familyId: Scalars['ID'];
+  payment: Scalars['Int'];
+  shortDescription: Scalars['String'];
+}>;
+
+
+export type CreateTaskMutation = (
+  { __typename?: 'Mutation' }
+  & { addFamilyTask: (
+    { __typename?: 'AddFamilyTaskPayload' }
+    & { familyTask?: Maybe<(
+      { __typename?: 'FamilyTask' }
+      & FamilyTaskInfoFragment
+    )> }
+  ) }
+);
+
 export type FamilyTaskInfoFragment = (
   { __typename?: 'FamilyTask' }
   & Pick<FamilyTask, 'createdOn' | 'shortDescription' | 'payment' | 'isCompleted'>
@@ -232,9 +270,20 @@ export type FamilyTaskInfoFragment = (
   )> }
 );
 
+export type GetFamilyTasksQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetFamilyTasksQuery = (
+  { __typename?: 'Query' }
+  & { familyTasks: Array<(
+    { __typename?: 'FamilyTask' }
+    & FamilyTaskInfoFragment
+  )> }
+);
+
 export type UserDetailsFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'birthDate' | 'familyId'>
+  & Pick<User, 'birthDate'>
 );
 
 export type UserInfoFragment = (
@@ -308,6 +357,7 @@ export type LoginMutation = (
 export type RegisterMutationVariables = Exact<{
   name: Scalars['String'];
   password: Scalars['String'];
+  birthDate: Scalars['DateTime'];
 }>;
 
 
@@ -365,9 +415,120 @@ export const FamilyTaskInfoFragmentDoc = gql`
 export const UserDetailsFragmentDoc = gql`
     fragment userDetails on User {
   birthDate
-  familyId
 }
     `;
+export const CreateFamilyDocument = gql`
+    mutation createFamily($familyName: String!) {
+  createFamily(input: {familyName: $familyName}) {
+    family {
+      id
+      familyName
+      members {
+        username
+      }
+    }
+  }
+}
+    `;
+export type CreateFamilyMutationFn = Apollo.MutationFunction<CreateFamilyMutation, CreateFamilyMutationVariables>;
+
+/**
+ * __useCreateFamilyMutation__
+ *
+ * To run a mutation, you first call `useCreateFamilyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateFamilyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createFamilyMutation, { data, loading, error }] = useCreateFamilyMutation({
+ *   variables: {
+ *      familyName: // value for 'familyName'
+ *   },
+ * });
+ */
+export function useCreateFamilyMutation(baseOptions?: Apollo.MutationHookOptions<CreateFamilyMutation, CreateFamilyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateFamilyMutation, CreateFamilyMutationVariables>(CreateFamilyDocument, options);
+      }
+export type CreateFamilyMutationHookResult = ReturnType<typeof useCreateFamilyMutation>;
+export type CreateFamilyMutationResult = Apollo.MutationResult<CreateFamilyMutation>;
+export type CreateFamilyMutationOptions = Apollo.BaseMutationOptions<CreateFamilyMutation, CreateFamilyMutationVariables>;
+export const CreateTaskDocument = gql`
+    mutation createTask($familyId: ID!, $payment: Int!, $shortDescription: String!) {
+  addFamilyTask(
+    input: {familyId: $familyId, payment: $payment, shortDescription: $shortDescription}
+  ) {
+    familyTask {
+      ...familyTaskInfo
+    }
+  }
+}
+    ${FamilyTaskInfoFragmentDoc}`;
+export type CreateTaskMutationFn = Apollo.MutationFunction<CreateTaskMutation, CreateTaskMutationVariables>;
+
+/**
+ * __useCreateTaskMutation__
+ *
+ * To run a mutation, you first call `useCreateTaskMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTaskMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTaskMutation, { data, loading, error }] = useCreateTaskMutation({
+ *   variables: {
+ *      familyId: // value for 'familyId'
+ *      payment: // value for 'payment'
+ *      shortDescription: // value for 'shortDescription'
+ *   },
+ * });
+ */
+export function useCreateTaskMutation(baseOptions?: Apollo.MutationHookOptions<CreateTaskMutation, CreateTaskMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTaskMutation, CreateTaskMutationVariables>(CreateTaskDocument, options);
+      }
+export type CreateTaskMutationHookResult = ReturnType<typeof useCreateTaskMutation>;
+export type CreateTaskMutationResult = Apollo.MutationResult<CreateTaskMutation>;
+export type CreateTaskMutationOptions = Apollo.BaseMutationOptions<CreateTaskMutation, CreateTaskMutationVariables>;
+export const GetFamilyTasksDocument = gql`
+    query getFamilyTasks {
+  familyTasks {
+    ...familyTaskInfo
+  }
+}
+    ${FamilyTaskInfoFragmentDoc}`;
+
+/**
+ * __useGetFamilyTasksQuery__
+ *
+ * To run a query within a React component, call `useGetFamilyTasksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetFamilyTasksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetFamilyTasksQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetFamilyTasksQuery(baseOptions?: Apollo.QueryHookOptions<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>(GetFamilyTasksDocument, options);
+      }
+export function useGetFamilyTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>(GetFamilyTasksDocument, options);
+        }
+export type GetFamilyTasksQueryHookResult = ReturnType<typeof useGetFamilyTasksQuery>;
+export type GetFamilyTasksLazyQueryHookResult = ReturnType<typeof useGetFamilyTasksLazyQuery>;
+export type GetFamilyTasksQueryResult = Apollo.QueryResult<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>;
 export const GetUserInfoDocument = gql`
     query getUserInfo {
   findUser {
@@ -498,8 +659,8 @@ export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
 export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
 export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const RegisterDocument = gql`
-    mutation Register($name: String!, $password: String!) {
-  createUser(input: {name: $name, password: $password}) {
+    mutation Register($name: String!, $password: String!, $birthDate: DateTime!) {
+  createUser(input: {name: $name, password: $password, birthDate: $birthDate}) {
     token
     user {
       ...userInfo
@@ -528,6 +689,7 @@ export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, Regis
  *   variables: {
  *      name: // value for 'name'
  *      password: // value for 'password'
+ *      birthDate: // value for 'birthDate'
  *   },
  * });
  */

@@ -1,0 +1,11 @@
+mutation createFamily($familyName: String!) {
+  createFamily(input: { familyName: $familyName }) {
+    family {
+      id
+      familyName
+      members {
+        username
+      }
+    }
+  }
+}

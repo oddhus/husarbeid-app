@@ -24,8 +24,24 @@ export const saveTokenAndUser = (
 export const retrieveUserWithToken = () => {
   const storedData = localStorage.getItem("userData");
   if (storedData) {
-    const data = JSON.parse(storedData) as storedUser;
-    return data;
+    return JSON.parse(storedData) as storedUser;
+  }
+};
+
+export const addFamilyId = (familyId: string) => {
+  const storedData = localStorage.getItem("userData");
+  if (storedData) {
+    const userData = JSON.parse(storedData) as storedUser;
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({
+        ...userData,
+        user: {
+          ...userData.user,
+          familyId,
+        },
+      })
+    );
   }
 };
 

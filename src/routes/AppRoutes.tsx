@@ -1,9 +1,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { Authentication } from "../components/Authentication/AuthenticationPage";
+import { Register } from "../components/Authentication/Register";
+import { SignIn } from "../components/Authentication/SignIn";
 import { LandingPage } from "../components/LandingPage/LandingPage";
 import MyAccount from "../components/MyAccount/MyAccount";
-import { Taskboard } from "../components/Taskboard";
+import { CreateTask } from "../components/Tasks/CreateTask";
+import { TaskPage } from "../Pages/TaskPage";
 
 interface Props {}
 
@@ -15,8 +17,10 @@ export const AppRoutes: React.FC<Props> = () => {
       <div style={{ flex: 1 }}>
         <Switch>
           <Route exact path="/" component={LandingPage} />
-          <Route exact path="/tasks" component={Taskboard} />
-          <Route exact path="/auth" component={Authentication} />
+          <Route exact path="/tasks" component={TaskPage} />
+          <Route exact path="/create-task" component={CreateTask} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/signin" component={SignIn} />
           <Route exact path="/my-account" component={MyAccount} />
         </Switch>
       </div>

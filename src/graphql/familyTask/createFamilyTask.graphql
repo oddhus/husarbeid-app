@@ -1,0 +1,17 @@
+mutation createTask(
+  $familyId: ID!
+  $payment: Int!
+  $shortDescription: String!
+) {
+  addFamilyTask(
+    input: {
+      familyId: $familyId
+      payment: $payment
+      shortDescription: $shortDescription
+    }
+  ) {
+    familyTask {
+      ...familyTaskInfo
+    }
+  }
+}

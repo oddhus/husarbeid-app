@@ -6,6 +6,7 @@ import {
   FormLabel,
   Input,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLoginMutation } from "../../generated/graphql";
@@ -13,6 +14,7 @@ import { useHistory } from "react-router";
 import { saveTokenAndUser } from "../../utils/tokenUtils";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./authAtom";
+import { NavLink } from "../shared/NavLink";
 
 type Inputs = {
   name: string;
@@ -53,40 +55,50 @@ export const SignIn = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <FormControl isInvalid={!!errors.name}>
-        <FormLabel htmlFor="name">User name</FormLabel>
-        <Input
-          id="name"
-          placeholder="name"
-          {...register("name", {
-            required: "This is required",
-            minLength: { value: 3, message: "Minimum length should be 4" },
-          })}
-        />
-        <FormErrorMessage>
-          {errors.name && errors.name.message}
-        </FormErrorMessage>
-      </FormControl>
-      <FormControl isInvalid={!!errors.name}>
-        <FormLabel htmlFor="name">Password</FormLabel>
-        <Input
-          id="password"
-          type="password"
-          placeholder="password"
-          {...register("password", {
-            required: "This is required",
-            minLength: { value: 3, message: "Minimum length should be 8" },
-          })}
-        />
-        <FormErrorMessage>
-          {errors.password && errors.password.message}
-        </FormErrorMessage>
-      </FormControl>
-      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Login
-      </Button>
-      {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-    </form>
+    <VStack>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel htmlFor="name">User name</FormLabel>
+          <Input
+            id="name"
+            placeholder="name"
+            {...register("name", {
+              required: "This is required",
+              minLength: { value: 3, message: "Minimum length should be 4" },
+            })}
+          />
+          <FormErrorMessage>
+            {errors.name && errors.name.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.name}>
+          <FormLabel htmlFor="name">Password</FormLabel>
+          <Input
+            id="password"
+            type="password"
+            placeholder="password"
+            {...register("password", {
+              required: "This is required",
+              minLength: { value: 3, message: "Minimum length should be 8" },
+            })}
+          />
+          <FormErrorMessage>
+            {errors.password && errors.password.message}
+          </FormErrorMessage>
+        </FormControl>
+        <Button
+          mt={4}
+          colorScheme="teal"
+          isLoading={isSubmitting}
+          type="submit"
+        >
+          Login
+        </Button>
+        {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+      </form>
+      <NavLink to={"/register"}>
+        Har du ikke opprettet en konto ennå? Trykk her!
+      </NavLink>
+    </VStack>
   );
 };

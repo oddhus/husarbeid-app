@@ -1,5 +1,7 @@
-mutation Register($name: String!, $password: String!) {
-  createUser(input: { name: $name, password: $password }) {
+mutation Register($name: String!, $password: String!, $birthDate: DateTime!) {
+  createUser(
+    input: { name: $name, password: $password, birthDate: $birthDate }
+  ) {
     token
     user {
       ...userInfo

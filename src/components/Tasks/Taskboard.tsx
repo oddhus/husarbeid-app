@@ -1,11 +1,13 @@
 import { Container } from "@chakra-ui/react";
 import React from "react";
-import { TaskList } from "./TaskList";
+import { FamilyTaskList } from "./FamilyTaskList";
+import { UserTaskList } from "./UserTaskList";
 
 export const Taskboard = () => {
   return (
     <Container maxW="md">
-      <TaskList />
+      <FamilyTaskList />
+      <UserTaskList />
     </Container>
   );
 };

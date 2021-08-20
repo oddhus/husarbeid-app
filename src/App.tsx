@@ -2,16 +2,17 @@ import React, { useEffect } from "react";
 import { BrowserRouter } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./components/Authentication/authAtom";
-import { Navbar } from "./components/Navbar/Navbar";
 import { AppRoutes } from "./routes/AppRoutes";
 import { retrieveUserWithToken } from "./utils/tokenUtils";
 import { compareDesc } from "date-fns";
+import { Navbar } from "./components/Navbar/Navbar";
 
 const App = () => {
   const setAuthAtom = useSetRecoilState(userState);
 
   useEffect(() => {
     const userData = retrieveUserWithToken();
+    console.log(userData);
     if (
       userData &&
       compareDesc(new Date(), new Date(userData.expirationTime)) === 1
