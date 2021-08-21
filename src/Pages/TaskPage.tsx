@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { userState } from "../components/Authentication/authAtom";
 import { CreateFamily } from "../components/Family/CreateFamily";
 import { CreateTask } from "../components/Tasks/CreateTask";
-import { Taskboard } from "../components/Tasks/Taskboard";
+import { FamilyTaskList } from "../components/Tasks/FamilyTaskList";
 
 export const TaskPage = () => {
   const user = useRecoilValue(userState);
@@ -12,7 +12,7 @@ export const TaskPage = () => {
     <div>
       {user?.familyId ? (
         <>
-          <CreateTask /> <Taskboard />
+          <CreateTask /> <FamilyTaskList />
         </>
       ) : (
         <CreateFamily />

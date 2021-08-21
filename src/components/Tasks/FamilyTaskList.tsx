@@ -1,6 +1,7 @@
 import { Center, CircularProgress, Text } from "@chakra-ui/react";
 import React from "react";
 import { useGetFamilyTasksQuery } from "../../generated/graphql";
+import { Taskboard } from "./Taskboard";
 import { TaskboardItem } from "./TaskboardItem";
 
 export const FamilyTaskList = () => {
@@ -24,9 +25,7 @@ export const FamilyTaskList = () => {
 
   return (
     <>
-      {data.familyTasks.map((task) => (
-        <TaskboardItem task={task} />
-      ))}
+      <Taskboard data={data.familyTasks} />
     </>
   );
 };
