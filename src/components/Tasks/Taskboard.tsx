@@ -38,7 +38,6 @@ const columns: GridColDef[] = [
 ];
 
 export const Taskboard = ({ data }: TaskboardProps) => {
-  console.log(data);
   return (
     <div style={{ height: 300, width: "100%" }}>
       <DataGrid rows={data} columns={columns} />
