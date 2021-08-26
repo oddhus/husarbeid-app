@@ -1,5 +1,5 @@
+import { Link } from "@material-ui/core";
 import React, { ReactNode } from "react";
-import { Link, useColorModeValue } from "@chakra-ui/react";
 import { Link as ReactRouterLink } from "react-router-dom";
 
 export const NavLink = ({
@@ -9,17 +9,7 @@ export const NavLink = ({
   children: ReactNode;
   to: string;
 }) => (
-  <Link
-    as={ReactRouterLink}
-    px={2}
-    py={1}
-    rounded={"md"}
-    _hover={{
-      textDecoration: "none",
-      bg: useColorModeValue("gray.200", "gray.700"),
-    }}
-    to={to}
-  >
+  <Link component={ReactRouterLink} to={to} variant="body2">
     {children}
   </Link>
 );

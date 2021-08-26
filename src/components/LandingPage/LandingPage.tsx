@@ -1,17 +1,16 @@
-import { Container, Heading, Text } from "@chakra-ui/layout";
-import { Box, Center } from "@chakra-ui/react";
+import { Container, Box, Typography } from "@material-ui/core";
 import React from "react";
 
 export const LandingPage = () => {
   return (
-    <Container maxW="lg">
-      <Box pt={10}>
-        <Center>
-          <Heading size="lg">Få oversikten over husarbeid og oppgaver</Heading>
-        </Center>
+    <Container>
+      <Box sx={{ pt: 10 }}>
+        <Typography variant="h1">
+          Få oversikten over husarbeid og oppgaver
+        </Typography>
       </Box>
-      <Box pt={5}>
-        <Text>Opprett en konto og sett igang!</Text>
+      <Box sx={{ pt: 5 }}>
+        <Typography>Opprett en konto og sett igang!</Typography>
       </Box>
     </Container>
   );

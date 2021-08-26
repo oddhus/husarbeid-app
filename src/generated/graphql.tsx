@@ -263,7 +263,7 @@ export type CreateTaskMutation = (
 
 export type FamilyTaskInfoFragment = (
   { __typename?: 'FamilyTask' }
-  & Pick<FamilyTask, 'createdOn' | 'shortDescription' | 'payment' | 'isCompleted'>
+  & Pick<FamilyTask, 'id' | 'createdOn' | 'shortDescription' | 'payment' | 'isCompleted'>
   & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & UserInfoFragment
@@ -403,6 +403,7 @@ export const FamilyMembersFragmentDoc = gql`
     ${UserInfoFragmentDoc}`;
 export const FamilyTaskInfoFragmentDoc = gql`
     fragment familyTaskInfo on FamilyTask {
+  id
   createdOn
   shortDescription
   payment

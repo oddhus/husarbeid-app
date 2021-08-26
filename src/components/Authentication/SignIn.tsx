@@ -1,13 +1,4 @@
 import React, { useState } from "react";
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLoginMutation } from "../../generated/graphql";
 import { useHistory } from "react-router";
@@ -15,6 +6,8 @@ import { saveTokenAndUser } from "../../utils/tokenUtils";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./authAtom";
 import { NavLink } from "../shared/NavLink";
+import { Box, Stack, TextField, Typography } from "@material-ui/core";
+import LoadingButton from "@material-ui/lab/LoadingButton";
 
 type Inputs = {
   name: string;
@@ -55,50 +48,40 @@ export const SignIn = () => {
   };
 
   return (
-    <VStack>
+    <Box sx={{ display: "flex", p: 2 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={!!errors.name}>
-          <FormLabel htmlFor="name">User name</FormLabel>
-          <Input
+        <Stack spacing={2}>
+          <TextField
+            variant="outlined"
             id="name"
             placeholder="name"
             {...register("name", {
               required: "This is required",
-              minLength: { value: 3, message: "Minimum length should be 4" },
+              minLength: { value: 4, message: "Minimum length should be 4" },
             })}
+            error={!!errors.name}
+            helperText={!!errors.name && errors.name.message}
           />
-          <FormErrorMessage>
-            {errors.name && errors.name.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={!!errors.name}>
-          <FormLabel htmlFor="name">Password</FormLabel>
-          <Input
+          <TextField
+            variant="outlined"
             id="password"
-            type="password"
-            placeholder="password"
+            placeholder="Password"
             {...register("password", {
               required: "This is required",
-              minLength: { value: 3, message: "Minimum length should be 8" },
+              minLength: { value: 8, message: "Minimum length should be 8" },
             })}
+            error={!!errors.password}
+            helperText={!!errors.password && errors.password.message}
           />
-          <FormErrorMessage>
-            {errors.password && errors.password.message}
-          </FormErrorMessage>
-        </FormControl>
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Login
-        </Button>
-        {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+          <LoadingButton sx={{ mt: 4 }} loading={isSubmitting} type="submit">
+            Login
+          </LoadingButton>
+          {errorMessage && <Typography>{errorMessage}</Typography>}
+          <NavLink to={"/register"}>
+            Har du ikke opprettet en konto ennå? Trykk her!
+          </NavLink>
+        </Stack>
       </form>
-      <NavLink to={"/register"}>
-        Har du ikke opprettet en konto ennå? Trykk her!
-      </NavLink>
-    </VStack>
+    </Box>
   );
 };

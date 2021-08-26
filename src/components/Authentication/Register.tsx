@@ -1,23 +1,16 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import "react-datepicker/dist/react-datepicker.css";
-import { CustomDatePicker } from "../shared/CustomDatePicker";
 import { useRegisterMutation } from "../../generated/graphql";
 import { saveTokenAndUser } from "../../utils/tokenUtils";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./authAtom";
 import { useHistory } from "react-router-dom";
 import { NavLink } from "../shared/NavLink";
+import { Box, Stack, TextField, Typography } from "@material-ui/core";
+import LoadingButton from "@material-ui/lab/LoadingButton";
+import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
+import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
+import DatePicker from "@material-ui/lab/DatePicker";
 
 type Inputs = {
   name: string;
@@ -37,6 +30,7 @@ export const Register = () => {
   const [registerMutation] = useRegisterMutation();
   const setUser = useSetRecoilState(userState);
   const history = useHistory();
+  const [value, setValue] = React.useState<Date | null>(null);
 
   const onSubmit: SubmitHandler<Inputs> = async (variables) => {
     const response = await registerMutation({ variables });
@@ -60,53 +54,55 @@ export const Register = () => {
   };
 
   return (
-    <VStack display="flex" p={2}>
+    <Box sx={{ display: "flex", p: 2 }}>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl isInvalid={!!errors.name}>
-          <FormLabel htmlFor="name">User name</FormLabel>
-          <Input
+        <Stack direction="column" spacing={2}>
+          <TextField
+            variant="outlined"
             id="name"
             placeholder="name"
             {...register("name", {
               required: "This is required",
               minLength: { value: 4, message: "Minimum length should be 4" },
             })}
+            error={!!errors.name}
+            helperText={!!errors.name && errors.name.message}
           />
-          <FormErrorMessage>
-            {errors.name && errors.name.message}
-          </FormErrorMessage>
-        </FormControl>
-        <FormControl isInvalid={!!errors.password}>
-          <FormLabel htmlFor="name">Password</FormLabel>
-          <Input
+          <TextField
+            variant="outlined"
             id="password"
-            type="password"
-            placeholder="password"
+            placeholder="Password"
             {...register("password", {
               required: "This is required",
               minLength: { value: 8, message: "Minimum length should be 8" },
             })}
+            error={!!errors.password}
+            helperText={!!errors.password && errors.password.message}
           />
-          <FormErrorMessage>
-            {errors.password && errors.password.message}
-          </FormErrorMessage>
-        </FormControl>
-        <CustomDatePicker
-          control={control}
-          fieldname="birthDate"
-          placeholder="DD/MM/YYYY"
-        />
-        <Button
-          mt={4}
-          colorScheme="teal"
-          isLoading={isSubmitting}
-          type="submit"
-        >
-          Register
-        </Button>
-        {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+          <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <DatePicker
+              label="Birth Date"
+              InputProps={{
+                name: "birthDate",
+              }}
+              value={value}
+              onChange={(newValue) => {
+                setValue(newValue);
+              }}
+              renderInput={(params) => (
+                <TextField {...register("birthDate")} {...params} />
+              )}
+            />
+          </LocalizationProvider>
+          <LoadingButton sx={{ mt: 4 }} loading={isSubmitting} type="submit">
+            Register
+          </LoadingButton>
+          {errorMessage && (
+            <Typography color="red.500">{errorMessage}</Typography>
+          )}
+          <NavLink to={"/signin"}>Har du allerede en konto? Logg inn!</NavLink>
+        </Stack>
       </form>
-      <NavLink to={"/signin"}>Har du allerede en konto? Logg inn!</NavLink>
-    </VStack>
+    </Box>
   );
 };

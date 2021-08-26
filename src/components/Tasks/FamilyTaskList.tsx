@@ -1,25 +1,24 @@
-import { Center, CircularProgress, Text } from "@chakra-ui/react";
+import { Box, CircularProgress, Typography } from "@material-ui/core";
 import React from "react";
 import { useGetFamilyTasksQuery } from "../../generated/graphql";
 import { Taskboard } from "./Taskboard";
-import { TaskboardItem } from "./TaskboardItem";
 
 export const FamilyTaskList = () => {
   const { data, loading, error } = useGetFamilyTasksQuery();
 
   if (loading) {
     return (
-      <Center>
+      <Box>
         <CircularProgress />
-      </Center>
+      </Box>
     );
   }
 
   if (!data || !data.familyTasks) {
     return (
-      <Center>
-        <Text>No tasks</Text>
-      </Center>
+      <Box>
+        <Typography>No tasks</Typography>
+      </Box>
     );
   }
 

@@ -6,9 +6,10 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { ChakraProvider } from "@chakra-ui/react";
 import { RecoilRoot } from "recoil";
 import { retrieveToken } from "./utils/tokenUtils";
+import { createTheme, ThemeProvider } from "@material-ui/core";
+import { green, purple } from "@material-ui/core/colors";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",
@@ -32,11 +33,22 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: purple[500],
+    },
+    secondary: {
+      main: green[500],
+    },
+  },
+});
+
 export const Providers: React.FC = ({ children }) => {
   return (
     <ApolloProvider client={client}>
       <RecoilRoot>
-        <ChakraProvider>{children}</ChakraProvider>
+        <ThemeProvider theme={theme}>{children}</ThemeProvider>
       </RecoilRoot>
     </ApolloProvider>
   );

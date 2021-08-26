@@ -1,11 +1,5 @@
-import {
-  Button,
-  FormControl,
-  FormErrorMessage,
-  FormLabel,
-  Input,
-  Text,
-} from "@chakra-ui/react";
+import { TextField, Typography } from "@material-ui/core";
+import LoadingButton from "@material-ui/lab/LoadingButton";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
@@ -54,24 +48,21 @@ export const CreateFamily = () => {
 
   return (
     <form onSubmit={handleSubmit(registerFamily)}>
-      <FormControl isInvalid={!!errors.familyName}>
-        <FormLabel htmlFor="familyName">Family Name</FormLabel>
-        <Input
-          id="familyName"
-          placeholder="familyName"
-          {...register("familyName", {
-            required: "This is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
-          })}
-        />
-        <FormErrorMessage>
-          {errors.familyName && errors.familyName.message}
-        </FormErrorMessage>
-      </FormControl>
-      <Button isLoading={isSubmitting} type="submit">
+      <TextField
+        id="familyName"
+        placeholder="familyName"
+        {...register("familyName", {
+          required: "This is required",
+          minLength: { value: 4, message: "Minimum length should be 4" },
+        })}
+        error={!!errors.familyName}
+        helperText={errors.familyName && errors.familyName.message}
+      />
+
+      <LoadingButton loading={isSubmitting} type="submit">
         Create Family
-      </Button>
-      {dbError && <Text color="red.500">{dbError}</Text>}
+      </LoadingButton>
+      {dbError && <Typography>{dbError}</Typography>}
     </form>
   );
 };

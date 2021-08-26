@@ -1,5 +1,4 @@
-import { Container, Heading, Text } from "@chakra-ui/react";
-import { CircularProgress } from "@chakra-ui/progress";
+import { CircularProgress, Container, Typography } from "@material-ui/core";
 import React from "react";
 import { useGetUserInfoQuery } from "../../generated/graphql";
 
@@ -12,9 +11,9 @@ const MyAccount = () => {
   }
 
   return (
-    <Container maxW="md">
-      <Heading>Account</Heading>
-      <Text>{data?.findUser.user?.username}</Text>
+    <Container>
+      <Typography variant="h1">Account</Typography>
+      <Typography>{data?.findUser.user?.username}</Typography>
     </Container>
   );
 };
