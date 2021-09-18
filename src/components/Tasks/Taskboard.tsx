@@ -5,7 +5,7 @@ import {
   DataGrid,
   GridColDef,
   GridValueFormatterParams,
-} from "@material-ui/data-grid";
+} from "@mui/x-data-grid";
 
 interface TaskboardProps {
   data: FamilyTaskInfoFragment[];

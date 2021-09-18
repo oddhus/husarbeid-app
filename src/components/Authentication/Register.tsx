@@ -6,11 +6,11 @@ import { useSetRecoilState } from "recoil";
 import { userState } from "./authAtom";
 import { useHistory } from "react-router-dom";
 import { NavLink } from "../shared/NavLink";
-import { Box, Stack, TextField, Typography } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
-import LocalizationProvider from "@material-ui/lab/LocalizationProvider";
-import AdapterDateFns from "@material-ui/lab/AdapterDateFns";
-import DatePicker from "@material-ui/lab/DatePicker";
+import { Box, Stack, TextField, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import DatePicker from "@mui/lab/DatePicker";
 
 type Inputs = {
   name: string;

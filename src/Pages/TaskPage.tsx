@@ -1,4 +1,4 @@
-import { Button, Container, Stack } from "@material-ui/core";
+import { Button, Container, Stack } from "@mui/material";
 import React from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userState } from "../components/Authentication/authAtom";

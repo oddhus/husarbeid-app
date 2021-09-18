@@ -1,4 +1,4 @@
-import { Link } from "@material-ui/core";
+import { Link } from "@mui/material";
 import React, { ReactNode } from "react";
 import { Link as ReactRouterLink } from "react-router-dom";
 

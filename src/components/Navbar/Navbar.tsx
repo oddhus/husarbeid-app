@@ -17,12 +17,9 @@ import {
   Toolbar,
   Tooltip,
   Typography,
-} from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
-
-import MenuIcon from "@material-ui/icons/Menu";
+} from "@mui/material";
 import { useState } from "react";
-import { Logout, PersonAdd, Settings } from "@material-ui/icons";
+import { Logout, PersonAdd, Settings } from "@mui/icons-material";
 import { AccountButton } from "./AccountButton";
 import { HamburgerMenu } from "./HamburgerMenu";
 

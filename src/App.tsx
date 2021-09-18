@@ -6,7 +6,7 @@ import { AppRoutes } from "./routes/AppRoutes";
 import { retrieveUserWithToken } from "./utils/tokenUtils";
 import { compareDesc } from "date-fns";
 import { Navbar } from "./components/Navbar/Navbar";
-import { CssBaseline } from "@material-ui/core";
+import { CssBaseline } from "@mui/material";
 
 const App = () => {
   const setAuthAtom = useSetRecoilState(userState);

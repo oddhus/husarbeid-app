@@ -6,8 +6,8 @@ import { saveTokenAndUser } from "../../utils/tokenUtils";
 import { useSetRecoilState } from "recoil";
 import { userState } from "./authAtom";
 import { NavLink } from "../shared/NavLink";
-import { Box, Stack, TextField, Typography } from "@material-ui/core";
-import LoadingButton from "@material-ui/lab/LoadingButton";
+import { Box, Stack, TextField, Typography } from "@mui/material";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 type Inputs = {
   name: string;

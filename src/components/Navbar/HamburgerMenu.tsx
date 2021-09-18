@@ -1,5 +1,5 @@
-import { IconButton, Menu, MenuItem, Toolbar } from "@material-ui/core";
-import { Menu as MenuIcon, MenuOpen } from "@material-ui/icons";
+import { IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
+import { Menu as MenuIcon, MenuOpen } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { NAV_ITEMS } from "./NavbarItems";

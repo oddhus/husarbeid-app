@@ -8,8 +8,8 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { RecoilRoot } from "recoil";
 import { retrieveToken } from "./utils/tokenUtils";
-import { createTheme, ThemeProvider } from "@material-ui/core";
-import { green, purple } from "@material-ui/core/colors";
+import { createTheme, ThemeProvider } from "@mui/material";
+import { green, purple } from "@mui/material/colors";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000/graphql",

@@ -5,9 +5,9 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@material-ui/core";
-import { Close } from "@material-ui/icons";
-import LoadingButton from "@material-ui/lab/LoadingButton";
+} from "@mui/material";
+import { Close } from "@mui/icons-material";
+import LoadingButton from "@mui/lab/LoadingButton";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";

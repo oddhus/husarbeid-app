@@ -6,8 +6,8 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-} from "@material-ui/core";
-import { Logout, PersonAdd, Settings } from "@material-ui/icons";
+} from "@mui/material";
+import { Logout, Settings } from "@mui/icons-material";
 import React, { useState } from "react";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import { removeToken } from "../../utils/tokenUtils";

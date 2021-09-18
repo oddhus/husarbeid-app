@@ -1,4 +1,4 @@
-import { Container, Box, Typography } from "@material-ui/core";
+import { Container, Box, Typography } from "@mui/material";
 import React from "react";
 
 export const LandingPage = () => {

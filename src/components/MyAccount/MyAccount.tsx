@@ -1,4 +1,4 @@
-import { CircularProgress, Container, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Typography } from "@mui/material";
 import React from "react";
 import { useGetUserInfoQuery } from "../../generated/graphql";
 
