@@ -27,20 +27,20 @@ const columns: GridColDef[] = [
       });
     },
   },
-  { field: "payment", headerName: "Payment", width: 48 },
+  { field: "payment", headerName: "Payment", width: 150 },
   {
     field: "isCompleted",
     headerName: "Completed",
     valueFormatter: (params: GridValueFormatterParams) =>
       Boolean(params.value) ? "Yes" : "No",
-    width: 48,
+    width: 150,
   },
 ];
 
 export const Taskboard = ({ data }: TaskboardProps) => {
   return (
-    <div style={{ height: 300, width: "100%" }}>
-      <DataGrid rows={data} columns={columns} />
+    <div style={{ height: 700, width: "100%" }}>
+      <DataGrid rows={data} columns={columns} autoPageSize />
     </div>
   );
 };
