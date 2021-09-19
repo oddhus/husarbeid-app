@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import { formatDistance } from "date-fns";
 import { FamilyTaskInfoFragment } from "../../generated/graphql";
 import {
   DataGrid,
   GridColDef,
+  GridRenderCellParams,
+  GridRowParams,
+  GridSelectionModel,
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { selectedTaskState } from "./selectedTaskAtom";
 
 interface TaskboardProps {
   data: FamilyTaskInfoFragment[];
@@ -38,9 +44,21 @@ const columns: GridColDef[] = [
 ];
 
 export const Taskboard = ({ data }: TaskboardProps) => {
+  const [selectionModel, setSelectionModel] = useRecoilState(selectedTaskState);
+
   return (
     <div style={{ height: 700, width: "100%" }}>
-      <DataGrid rows={data} columns={columns} autoPageSize />
+      <DataGrid
+        rows={data}
+        columns={columns}
+        autoPageSize
+        checkboxSelection
+        onSelectionModelChange={(newSelectionModel) => {
+          setSelectionModel(newSelectionModel);
+        }}
+        isRowSelectable={(params: GridRowParams) => !params.row.assignedTo}
+        selectionModel={selectionModel}
+      />
     </div>
   );
 };

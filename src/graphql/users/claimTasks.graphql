@@ -1,0 +1,10 @@
+mutation ClaimTasks($taskIds: [ID!]!) {
+  claimTask(input: { taskIds: $taskIds }) {
+    user {
+      ...userInfo
+    }
+    errors {
+      ...errorInfo
+    }
+  }
+}

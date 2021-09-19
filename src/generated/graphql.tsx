@@ -267,6 +267,9 @@ export type FamilyTaskInfoFragment = (
   & { createdBy?: Maybe<(
     { __typename?: 'User' }
     & UserInfoFragment
+  )>, assignedTo?: Maybe<(
+    { __typename?: 'User' }
+    & UserInfoFragment
   )> }
 );
 
@@ -279,6 +282,25 @@ export type GetFamilyTasksQuery = (
     { __typename?: 'FamilyTask' }
     & FamilyTaskInfoFragment
   )> }
+);
+
+export type ClaimTasksMutationVariables = Exact<{
+  taskIds: Array<Scalars['ID']> | Scalars['ID'];
+}>;
+
+
+export type ClaimTasksMutation = (
+  { __typename?: 'Mutation' }
+  & { claimTask: (
+    { __typename?: 'ClaimTaskPayload' }
+    & { user?: Maybe<(
+      { __typename?: 'User' }
+      & UserInfoFragment
+    )>, errors?: Maybe<Array<(
+      { __typename?: 'UserError' }
+      & ErrorInfoFragment
+    )>> }
+  ) }
 );
 
 export type UserDetailsFragment = (
@@ -411,6 +433,9 @@ export const FamilyTaskInfoFragmentDoc = gql`
   createdBy {
     ...userInfo
   }
+  assignedTo {
+    ...userInfo
+  }
 }
     ${UserInfoFragmentDoc}`;
 export const UserDetailsFragmentDoc = gql`
@@ -530,6 +555,45 @@ export function useGetFamilyTasksLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type GetFamilyTasksQueryHookResult = ReturnType<typeof useGetFamilyTasksQuery>;
 export type GetFamilyTasksLazyQueryHookResult = ReturnType<typeof useGetFamilyTasksLazyQuery>;
 export type GetFamilyTasksQueryResult = Apollo.QueryResult<GetFamilyTasksQuery, GetFamilyTasksQueryVariables>;
+export const ClaimTasksDocument = gql`
+    mutation ClaimTasks($taskIds: [ID!]!) {
+  claimTask(input: {taskIds: $taskIds}) {
+    user {
+      ...userInfo
+    }
+    errors {
+      ...errorInfo
+    }
+  }
+}
+    ${UserInfoFragmentDoc}
+${ErrorInfoFragmentDoc}`;
+export type ClaimTasksMutationFn = Apollo.MutationFunction<ClaimTasksMutation, ClaimTasksMutationVariables>;
+
+/**
+ * __useClaimTasksMutation__
+ *
+ * To run a mutation, you first call `useClaimTasksMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useClaimTasksMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [claimTasksMutation, { data, loading, error }] = useClaimTasksMutation({
+ *   variables: {
+ *      taskIds: // value for 'taskIds'
+ *   },
+ * });
+ */
+export function useClaimTasksMutation(baseOptions?: Apollo.MutationHookOptions<ClaimTasksMutation, ClaimTasksMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ClaimTasksMutation, ClaimTasksMutationVariables>(ClaimTasksDocument, options);
+      }
+export type ClaimTasksMutationHookResult = ReturnType<typeof useClaimTasksMutation>;
+export type ClaimTasksMutationResult = Apollo.MutationResult<ClaimTasksMutation>;
+export type ClaimTasksMutationOptions = Apollo.BaseMutationOptions<ClaimTasksMutation, ClaimTasksMutationVariables>;
 export const GetUserInfoDocument = gql`
     query getUserInfo {
   findUser {
