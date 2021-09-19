@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { formatDistance } from "date-fns";
 import { FamilyTaskInfoFragment } from "../../generated/graphql";
 import {
@@ -6,16 +6,32 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridRowParams,
-  GridSelectionModel,
   GridValueFormatterParams,
 } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { Avatar, Box, Chip } from "@mui/material";
+import { useRecoilState } from "recoil";
 import { selectedTaskState } from "./selectedTaskAtom";
+import { stringAvatar } from "../../utils/avatarUtils";
 
 interface TaskboardProps {
   data: FamilyTaskInfoFragment[];
 }
+
+const StatusCell = (params: GridRenderCellParams) => {
+  const assignedTo = params.getValue(params.id, "assignedTo") as {
+    username: string;
+  };
+  if (assignedTo) {
+    return <Avatar {...stringAvatar(assignedTo.username.toString() || "NN")} />;
+  }
+
+  const isCompleted = params.getValue(params.id, "isCompleted");
+  if (Boolean(isCompleted)) {
+    return <Chip label="Completed" color="secondary" variant="outlined" />;
+  }
+
+  return <Chip label="Available" color="primary" variant="outlined" />;
+};
 
 const columns: GridColDef[] = [
   { field: "shortDescription", headerName: "Description", flex: 1 },
@@ -33,14 +49,8 @@ const columns: GridColDef[] = [
       });
     },
   },
-  { field: "payment", headerName: "Payment", width: 150 },
-  {
-    field: "isCompleted",
-    headerName: "Completed",
-    valueFormatter: (params: GridValueFormatterParams) =>
-      Boolean(params.value) ? "Yes" : "No",
-    width: 150,
-  },
+  { field: "payment", headerName: "Payment", width: 100 },
+  { field: "Status", renderCell: StatusCell },
 ];
 
 export const Taskboard = ({ data }: TaskboardProps) => {
